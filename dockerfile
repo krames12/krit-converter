@@ -32,11 +32,21 @@ RUN chmod +x /go/bin/app
 # Start a new stage from a base Debian image
 FROM debian:buster-slim
 
+# Install runtime dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    imagemagick \
+    potrace \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
 # Copy the pre-built binary from the previous stage
-COPY --from=build /go/bin/app /app
+COPY --from=build /go/bin/app /app/app
+# Copy templates and static files
+COPY --from=build /app/templates /app/templates
+COPY --from=build /app/uploads /app/uploads
 
 # Set permissions for the application binary
 RUN chmod +x /app/app
