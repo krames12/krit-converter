@@ -6,10 +6,13 @@
     <title>File Upload</title>
 </head>
 <body>
-    <h2>Upload a File</h2>
+    <h2>Create an Image</h2>
     <form enctype="multipart/form-data" action="/upload" method="post">
-        <input type="file" name="uploadFile" required>
-        <input type="submit" value="Upload">
+        <label for="text">Text:</label>
+        <input type="text" id="text" name="text" required><br>
+        <label for="font">Font File:</label>
+        <input type="file" id="font" name="font" required><br>
+        <input type="submit" value="Create Image">
     </form>
 </body>
 </html>
