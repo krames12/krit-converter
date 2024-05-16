@@ -13,4 +13,5 @@ require (
 	golang.org/x/net v0.24.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
+	gopkg.in/gographics/imagick.v2 v2.6.4 // indirect
 )
