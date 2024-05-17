@@ -2,12 +2,80 @@
 <html>
 <head>
     <title>{{.Title}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'sky-blue': {
+                '50': '#edfcfe',
+                '100': '#d3f5fa',
+                '200': '#aceaf5',
+                '300': '#53d0ea',
+                '400': '#32bede',
+                '500': '#16a1c4',
+                '600': '#1581a5',
+                '700': '#186886',
+                '800': '#1c556e',
+                '900': '#1c475d',
+                '950': '#0d2e3f',
+              },
+            },
+          },
+        },
+      };
+    </script>
 </head>
-<body>
-    <h1>{{.Title}}</h1>
-    <form enctype="multipart/form-data" action="/" method="post">
-        <input type="file" name="font">
-        <input type="submit" value="Upload">
-    </form>
+<body class="bg-gray-100">
+  <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div class="space-y-4">
+      <h1 class="text-2xl font-bold">Convert Font to SVG</h1>
+      <p class="text-gray-500">Select a formatting preset and upload your document.</p>
+      <form class="space-y-4" enctype="multipart/form-data" action="/" method="post">
+        <div>
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="file"
+          >
+            Document
+          </label>
+          <input
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 file:border-r-1 file:border-black"
+            id="file"
+            type="file"
+            name="font"
+          />
+        </div>
+        <div>
+          <label
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            for="preset"
+          >
+            Formatting Preset
+          </label>
+          <select
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-hidden="true"
+            tabindex="2"
+          >
+            <option value="default" selected="">
+              Default
+            </option>
+            <option value="minimal">Minimal</option>
+            <option value="formal">Formal</option>
+            <option value="modern">Modern</option>
+            <option value="classic">Classic</option>
+          </select>
+        </div>
+        <button
+          class="inline-flex items-center bg-black text-white justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+          type="submit"
+        >
+          Generate SVG's
+        </button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
