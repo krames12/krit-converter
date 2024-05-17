@@ -18,7 +18,13 @@ import (
 type PageData struct {
 	Title   string
 	Message string
-	Files   []string
+	Files   []FileData
+}
+
+// FileData holds information about each file
+type FileData struct {
+	Name string
+	Path string
 }
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
@@ -72,11 +78,17 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Cleanup temporary files except for the SVG
 	cleanupTempFiles(tempDir, svgFilePath)
 
+	// Create file data
+	fileData := FileData{
+		Name: filepath.Base(svgFilePath),
+		Path: svgFilePath,
+	}
+
 	// Render success template with file information
 	renderTemplate(w, "success", PageData{
 		Title:   "Upload Successful",
 		Message: "Your SVG file has been created.",
-		Files:   []string{svgFilePath},
+		Files:   []FileData{fileData},
 	})
 
 	// Schedule cleanup of the upload directory
