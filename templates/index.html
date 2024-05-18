@@ -28,10 +28,10 @@
     </script>
 </head>
 <body class="bg-gray-100">
-  <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
+  <div class="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg">
     <div class="space-y-4">
-      <h1 class="text-2xl font-bold">Convert Font to SVG</h1>
-      <p class="text-gray-500">Select a formatting preset and upload your document.</p>
+      <h1 class="text-2xl font-bold">Krit Converter</h1>
+      <p class="text-gray-500">Upload a font file and the numbers will be converted to SVG format.</p>
       <form class="space-y-4" enctype="multipart/form-data" action="/" method="post">
         <div>
           <label
@@ -47,6 +47,7 @@
             name="font"
           />
         </div>
+        <p class="text-sm text-gray-500">Supported file types: .ttf, .otf</p>
         <div>
           <label
             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -54,19 +55,6 @@
           >
             Formatting Preset
           </label>
-          <select
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            aria-hidden="true"
-            tabindex="2"
-          >
-            <option value="default" selected="">
-              Default
-            </option>
-            <option value="minimal">Minimal</option>
-            <option value="formal">Formal</option>
-            <option value="modern">Modern</option>
-            <option value="classic">Classic</option>
-          </select>
         </div>
         <button
           class="inline-flex items-center bg-black text-white justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
@@ -75,6 +63,29 @@
           Generate SVG's
         </button>
       </form>
+      <div class="space-y-4">
+        <h3 class="text-xl font-bold">What will be generated?</h3>
+        <div class="grid gap-4">
+          <div>
+            <h4 class="font-semibold">Dice Set</h4>
+            <div class="flex flex-wrap gap-4">
+              <p class="p-2 border-b border-1 border-gray-400">0-20</p>
+              <p class="p-2 border-b border-1 border-gray-400">30</p>
+              <p class="p-2 border-b border-1 border-gray-400">40</p>
+              <p class="p-2 border-b border-1 border-gray-400">50</p>
+              <p class="p-2 border-b border-1 border-gray-400">60</p>
+              <p class="p-2 border-b border-1 border-gray-400">70</p>
+              <p class="p-2 border-b border-1 border-gray-400">80</p>
+              <p class="p-2 border-b border-1 border-gray-400">90</p>
+              <p class="p-2 border-b border-1 border-gray-400">00</p>
+              <p class="p-2 border-b border-1 border-gray-400">6.</p>
+              <p class="p-2 border-b border-1 border-gray-400">6_</p>
+              <p class="p-2 border-b border-1 border-gray-400">9.</p>
+              <p class="p-2 border-b border-1 border-gray-400">9_</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </body>

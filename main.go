@@ -9,10 +9,17 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+// FileData holds information about each file
+type FileData struct {
+	Name string
+	Path string
+}
 
 // PageData holds data to render HTML templates
 type PageData struct {
@@ -21,13 +28,44 @@ type PageData struct {
 	Files   []FileData
 }
 
-// FileData holds information about each file
-type FileData struct {
-	Name string
-	Path string
-}
-
 var templates = template.Must(template.ParseGlob("templates/*.html"))
+
+// Predefined array of strings to be converted
+var textsToConvert = []string{
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"10",
+	"11",
+	"12",
+	"13",
+	"14",
+	"15",
+	"16",
+	"17",
+	"18",
+	"19",
+	"20",
+	"30",
+	"40",
+	"50",
+	"60",
+	"70",
+	"80",
+	"90",
+	"00",
+	"6.",
+	"6_",
+	"9.",
+	"9_",
+}
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data PageData) {
 	err := templates.ExecuteTemplate(w, tmpl+".html", data)
@@ -51,6 +89,11 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
+	if !isValidFontFile(handler.Filename) {
+		http.Error(w, "Invalid file format. Only .ttf and .otf are allowed.", http.StatusBadRequest)
+		return
+	}
+
 	tempDir := filepath.Join("uploads", uuid.New().String())
 	os.MkdirAll(tempDir, os.ModePerm)
 
@@ -68,39 +111,42 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Generate SVG from font using imagemagick and potrace
-	svgFilePath, err := generateSVG(tempFilePath, tempDir)
-	if err != nil {
-		http.Error(w, "Error generating SVG", http.StatusInternalServerError)
-		return
+	files := []FileData{}
+	for _, text := range textsToConvert {
+		svgFilePath, err := generateSVG(tempFilePath, tempDir, text)
+		if err != nil {
+			http.Error(w, "Error generating SVG", http.StatusInternalServerError)
+			return
+		}
+		files = append(files, FileData{
+			Name: filepath.Base(svgFilePath),
+			Path: svgFilePath,
+		})
 	}
 
-	// Cleanup temporary files except for the SVG
-	cleanupTempFiles(tempDir, svgFilePath)
+	cleanupTempFiles(tempDir, ".svg")
 
-	// Create file data
-	fileData := FileData{
-		Name: filepath.Base(svgFilePath),
-		Path: svgFilePath,
-	}
-
-	// Render success template with file information
 	renderTemplate(w, "success", PageData{
 		Title:   "Upload Successful",
-		Message: "Your SVG file has been created.",
-		Files:   []FileData{fileData},
+		Message: "Your SVG files have been created.",
+		Files:   files,
 	})
 
-	// Schedule cleanup of the upload directory
 	go scheduleCleanup(tempDir, 1*time.Hour)
 }
 
-func generateSVG(inputPath, outputDir string) (string, error) {
-	bitmapPath := filepath.Join(outputDir, "output.bmp")
-	svgPath := filepath.Join(outputDir, "output.svg")
+func isValidFontFile(filename string) bool {
+	ext := strings.ToLower(filepath.Ext(filename))
+	return ext == ".ttf" || ext == ".otf"
+}
+
+func generateSVG(inputPath, outputDir, text string) (string, error) {
+	baseName := uuid.New().String()
+	bitmapPath := filepath.Join(outputDir, baseName+".bmp")
+	svgPath := filepath.Join(outputDir, baseName+".svg")
 
 	// Run ImageMagick to create a bitmap
-	cmd := exec.Command("convert", "-size", "100x100", "xc:white", "-font", inputPath, "-pointsize", "72", "-fill", "black", "-draw", "text 10,70 'A'", bitmapPath)
+	cmd := exec.Command("convert", "-size", "100x100", "xc:white", "-font", inputPath, "-pointsize", "72", "-fill", "black", "-draw", fmt.Sprintf("text 10,70 '%s'", text), bitmapPath)
 	err := cmd.Run()
 	if err != nil {
 		return "", fmt.Errorf("error running ImageMagick: %v", err)
@@ -116,7 +162,7 @@ func generateSVG(inputPath, outputDir string) (string, error) {
 	return svgPath, nil
 }
 
-func cleanupTempFiles(tempDir, excludeFile string) {
+func cleanupTempFiles(tempDir, excludeExt string) {
 	files, err := os.ReadDir(tempDir)
 	if err != nil {
 		log.Printf("error reading temp directory: %v", err)
@@ -124,7 +170,7 @@ func cleanupTempFiles(tempDir, excludeFile string) {
 	}
 	for _, file := range files {
 		filePath := filepath.Join(tempDir, file.Name())
-		if filePath != excludeFile {
+		if !strings.HasSuffix(filePath, excludeExt) {
 			os.Remove(filePath)
 		}
 	}
