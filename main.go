@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archive/zip"
 	"fmt"
 	"html/template"
 	"io"
@@ -26,6 +27,8 @@ type PageData struct {
 	Title   string
 	Message string
 	Files   []FileData
+	ZipPath string
+	ZipName string
 }
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
@@ -124,12 +127,22 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	cleanupTempFiles(tempDir, ".svg")
+	zipFilePath, err := createZipFile(tempDir, handler.Filename, files)
+	if err != nil {
+		http.Error(w, "Error creating ZIP file", http.StatusInternalServerError)
+		return
+	}
+
+	cleanupTempFiles(tempDir, ".zip")
+
+	zipFileName := filepath.Base(zipFilePath)
 
 	renderTemplate(w, "success", PageData{
 		Title:   "Upload Successful",
-		Message: "Your SVG files have been created.",
+		Message: "Your SVG files have been created and compressed.",
 		Files:   files,
+		ZipPath: "/" + zipFilePath,
+		ZipName: zipFileName,
 	})
 
 	go scheduleCleanup(tempDir, 1*time.Hour)
@@ -160,6 +173,40 @@ func generateSVG(inputPath, outputDir, text string) (string, error) {
 	}
 
 	return svgPath, nil
+}
+
+func createZipFile(dir, originalFilename string, files []FileData) (string, error) {
+	zipFilename := strings.TrimSuffix(originalFilename, filepath.Ext(originalFilename)) + ".zip"
+	zipFilePath := filepath.Join(dir, zipFilename)
+
+	zipFile, err := os.Create(zipFilePath)
+	if err != nil {
+		return "", err
+	}
+	defer zipFile.Close()
+
+	zipWriter := zip.NewWriter(zipFile)
+	defer zipWriter.Close()
+
+	for _, file := range files {
+		f, err := os.Open(file.Path)
+		if err != nil {
+			return "", err
+		}
+		defer f.Close()
+
+		w, err := zipWriter.Create(file.Name)
+		if err != nil {
+			return "", err
+		}
+
+		_, err = io.Copy(w, f)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return filepath.Join(dir, zipFilename), nil
 }
 
 func cleanupTempFiles(tempDir, excludeExt string) {

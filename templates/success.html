@@ -15,8 +15,7 @@
       </div>
       <div class="space-y-4">
         <div class="flex flex-wrap items-start gap-4 rounded-lg bg-white p-4 shadow-sm transition-all sm:p-6">
-          {{range .Files}}
-          <a class="flex w-full p-4 shrink-0 items-center justify-center rounded-md bg-gray-100 hover:bg-gray-200 transition-colors group-hover:bg-gray-200" href="{{.Path}}">
+          <a class="flex w-full p-4 shrink-0 items-center justify-center rounded-md bg-gray-100 hover:bg-gray-200 transition-colors group-hover:bg-gray-200" href="{{.ZipPath}}">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -33,9 +32,8 @@
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" x2="12" y1="15" y2="3"></line>
             </svg>
-            <p class="text-lg font-semibold">{{.Name}}</p>
+            <p class="text-lg font-semibold">{{.ZipName}}</p>
           </a>
-          {{end}}
         </div>
       </div>
     </div>
