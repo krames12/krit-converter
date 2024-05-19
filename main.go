@@ -65,9 +65,8 @@ var textsToConvert = []string{
 	"90",
 	"00",
 	"6.",
-	"6_",
 	"9.",
-	"9_",
+	"_",
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data PageData) {
