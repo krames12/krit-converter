@@ -1,36 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Title}}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'sky-blue': {
-                '50': '#edfcfe',
-                '100': '#d3f5fa',
-                '200': '#aceaf5',
-                '300': '#53d0ea',
-                '400': '#32bede',
-                '500': '#16a1c4',
-                '600': '#1581a5',
-                '700': '#186886',
-                '800': '#1c556e',
-                '900': '#1c475d',
-                '950': '#0d2e3f',
-              },
-            },
-          },
-        },
-      };
-    </script>
+    <script src="https://kit.fontawesome.com/6b6d567c7b.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-gray-100">
-  <div class="w-full p-4 h-16">
+  <div class="w-full p-4 h-16 text-center">
     <a href="/" class="flex items-center">
-      <img src="/static/d20.svg" class="w-10 h-10 pt-1" />
+      <i class="fa-solid fa-dice-d20 pr-2"></i>
       <p class="text-center text-xl">Krit Converter</p>
     </a>
   </div>
@@ -91,6 +71,24 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="mx-auto mt-12 px-4 border-t-1 border-gray-400 text-center">
+    <h2 class="text-xl font-bold">Support the Creator</h2>
+    <p class="text-gray-500">If you like this tool, consider supporting the creator!</p>
+    <div class="flex flex-wrap gap-2 justify-center mt-4">
+      <a href="https://ko-fi.com/kramercodes" class="flex items-center justify-center px-2">
+        <i class="fa-solid fa-mug-hot pr-2"></i>
+        <p class="text-center">Buy me a coffee</p>
+      </a>
+      <a href="https://github.com/krames12/krit-converter" class="flex items-center justify-center px-2">
+        <i class="fa-brands fa-github pr-2"></i>
+        <p class="text-center">Contribute on GitHub</p>
+      </a>
+      <a href="https://www.kritdice.com" class="flex items-center justify-center px-2">
+        <i class="fa-solid fa-shop pr-2"></i>
+        <p class="text-center">Visit our shop</p>
+      </a>
     </div>
   </div>
 </body>
